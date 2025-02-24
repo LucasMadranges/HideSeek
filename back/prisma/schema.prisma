@@ -8,10 +8,50 @@ datasource db {
   url      = env("DATABASE_URL_USERS")
 }
 
-model users {
-  id        String @id @default(uuid())
+model Users {
+  id        String  @id @default(uuid())
   firstname String
   lastname  String
-  email     String @unique
+  email     String  @unique
   password  String
+  Player    Player?
+}
+
+model Player {
+  id       Int          @id @default(autoincrement())
+  position Json // { latitude: number, longitude: number }
+  role     Role
+  status   StatusPlayer
+  score    Int          @default(0)
+  games    Game[]       @relation("PlayerGames")
+
+  userId String @unique
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Game {
+  id        Int        @id @default(autoincrement())
+  name      String
+  startTime DateTime   @default(now())
+  duration  Int // Duration in secondes
+  area      Json // { topLeft: { latitude: number, longitude: number }, bottomRight: { latitude: number, longitude: number } }
+  players   Player[]   @relation("PlayerGames")
+  status    StatusGame
+}
+
+enum Role {
+  HIDER
+  SEEKER
+}
+
+enum StatusPlayer {
+  HIDDEN
+  FOUND
+  SEEKING
+}
+
+enum StatusGame {
+  WAITING
+  IN_PROGRESS
+  FINISHED
 }
