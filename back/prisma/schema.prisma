@@ -37,7 +37,7 @@ model Game {
   duration  Int // Duration in secondes
   area      Json // { topLeft: { latitude: number, longitude: number }, bottomRight: { latitude: number, longitude: number } }
   players   Player[]   @relation("PlayerGames")
-  status    StatusGame
+  status    StatusGame @default(WAITING)
 }
 
 enum Role {
