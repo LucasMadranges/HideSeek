@@ -1,8 +1,8 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post, Put} from "@nestjs/common";
 import {UsersService} from "./users.service";
-import {users} from "@prisma/client";
-import {ApiOperation, ApiParam} from "@nestjs/swagger";
+import {ApiParam} from "@nestjs/swagger";
 import {CreateUserDto} from "./models/create-user.dto";
+import {Users} from "@prisma/client";
 
 @Controller("users")
 export class UsersController {
@@ -11,7 +11,7 @@ export class UsersController {
     ) {}
 
     @Get()
-    getUsers(): Promise<users[]> {
+    getUsers(): Promise<Users[]> {
         return this.usersService.getUsers();
     }
 
@@ -21,22 +21,22 @@ export class UsersController {
         type: String,
         description: "ID de l'utilisateur",
     })
-    getUserById(@Param("id") id: string): Promise<users> {
+    getUserById(@Param("id") id: string): Promise<Users> {
         return this.usersService.getUserById(id);
     }
 
     @Post()
-    async createUser(@Body() createUserDto: CreateUserDto): Promise<users> {
+    async createUser(@Body() createUserDto: CreateUserDto): Promise<Users> {
         return this.usersService.createUser(createUserDto);
     }
 
     @Put(":id")
-    async updateUser(@Param("id") id: string, @Body() createUserDto: CreateUserDto): Promise<users> {
+    async updateUser(@Param("id") id: string, @Body() createUserDto: CreateUserDto): Promise<Users> {
         return this.usersService.updateUser(id, createUserDto);
     }
 
     @Delete(":id")
-    async deleteUser(@Param("id") id: string): Promise<users> {
+    async deleteUser(@Param("id") id: string): Promise<Users> {
         return this.usersService.deleteUser(id);
     }
 }
