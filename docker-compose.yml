@@ -1,0 +1,13 @@
+services:
+  hideeseek-db:
+    image: postgres:16
+    container_name: hideeseek
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_users_data:/var/lib/postgresql/data
+    env_file:
+      - ./back/.env
+
+volumes:
+  db_users_data:
