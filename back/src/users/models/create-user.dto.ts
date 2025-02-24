@@ -3,6 +3,12 @@ import {IsString, IsEmail, IsNotEmpty, IsStrongPassword} from "class-validator";
 
 export class CreateUserDto {
     @ApiProperty({
+        description: "Un avatar de l'utilisateur",
+    })
+    @IsString()
+    readonly avatar?: string;
+
+    @ApiProperty({
         description: "Le prénom de l'utilisateur",
         example: "Jean",
     })
