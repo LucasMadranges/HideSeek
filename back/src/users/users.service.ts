@@ -22,7 +22,9 @@ export class UsersService {
     }
 
     async createUser(data: CreateUserDto): Promise<Users> {
-        return this.prisma.users.create({data});
+        return this.prisma.users.create({
+            data,
+        });
     }
 
     async updateUser(id: string, data: CreateUserDto): Promise<Users> {
