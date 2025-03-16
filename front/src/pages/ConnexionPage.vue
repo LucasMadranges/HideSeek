@@ -13,8 +13,10 @@
                :dense="dense"
                label="Mot de passe"
                outlined/>
+      <div class="q-my-lg"
+           style="border-bottom: 1px solid #ccc;"></div>
       <q-btn color="blue"
-             label="Rejoindre une partie"
+             label="Connexion"
              push
              text-color="black"/>
     </div>
