@@ -9,20 +9,12 @@ export class CreateUserDto {
     readonly avatar?: string;
 
     @ApiProperty({
-        description: "Le prénom de l'utilisateur",
-        example: "Jean",
-    })
-    @IsString()
-    @IsNotEmpty({message: "Le prénom est requis"})
-    readonly firstname: string;
-
-    @ApiProperty({
         description: "Le nom de l'utilisateur",
-        example: "Dupont",
+        example: "Jean80",
     })
     @IsString()
     @IsNotEmpty({message: "Le nom est requis"})
-    readonly lastname: string;
+    readonly username: string;
 
     @ApiProperty({
         description: "L'adresse email de l'utilisateur",
@@ -45,6 +37,7 @@ export class CreateUserDto {
     }, {
         message: "Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un symbole.",
     })
+    @IsString()
     @IsNotEmpty({message: "Le mot de passe est requis"})
     readonly password: string;
 }
