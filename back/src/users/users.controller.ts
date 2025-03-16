@@ -25,6 +25,16 @@ export class UsersController {
         return this.usersService.getUserById(id);
     }
 
+    @Get(":email")
+    @ApiParam({
+        name: "email",
+        type: String,
+        description: "Email de l'utilisateur",
+    })
+    getUserByEmail(@Param("email") email: string): Promise<Users> {
+        return this.usersService.getUserByEmail(email);
+    }
+
     @Post()
     async createUser(@Body() data: CreateUserDto): Promise<Users> {
         return this.usersService.createUser(data);
