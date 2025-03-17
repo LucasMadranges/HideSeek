@@ -9,7 +9,7 @@ import TimeLeft from "components/TimeLeft.vue";
 </script>
 
 <template>
-  <SeekerIcon/>
+  <SeekerIcon :isAbsolute="true"/>
 
   <PlayersLeft/>
 
