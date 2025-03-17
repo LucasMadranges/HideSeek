@@ -1,3 +1,13 @@
+<template>
+  <q-page>
+    <div
+      ref="mapContainer"
+      class="map-container"
+    />
+    <div style="z-index: 10">Lol</div>
+  </q-page>
+</template>
+
 <script lang="ts"
         setup>
 import {onMounted, ref} from "vue";
@@ -80,15 +90,6 @@ onMounted(() => {
   });
 });
 </script>
-
-<template>
-  <q-page>
-    <div
-      ref="mapContainer"
-      class="map-container"
-    />
-  </q-page>
-</template>
 
 <style scoped>
 .map-container {
