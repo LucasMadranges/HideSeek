@@ -3,9 +3,10 @@
     <div
       ref="mapContainer"
       class="map-container"
+      style="z-index: 0;"
     />
-    <div style="z-index: 10">Lol</div>
   </q-page>
+  <GameHud/>
 </template>
 
 <script lang="ts"
@@ -14,6 +15,7 @@ import {onMounted, ref} from "vue";
 import type {Map as MapboxMap} from "mapbox-gl";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import GameHud from "src/components/GameHUD.vue";
 
 const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const mapContainer = ref<HTMLElement | null>(null);
@@ -94,7 +96,7 @@ onMounted(() => {
 <style scoped>
 .map-container {
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   position: absolute;
   top: 0;
   left: 0;
@@ -102,7 +104,7 @@ onMounted(() => {
 
 :deep(.q-page) {
   padding: 0;
-  min-height: 100vh;
+  min-height: 100svh;
 }
 
 :deep(.mapboxgl-popup) {
