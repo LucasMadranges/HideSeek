@@ -9,7 +9,7 @@
     <div id="button-container">
       <q-btn class=""
              color="white"
-             href="/party"
+             href="/game"
              label="Créer une partie"
              push
              text-color="black"/>
