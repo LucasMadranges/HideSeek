@@ -29,6 +29,16 @@ import soundWidePutinWalkin from "../assets/sounds/wide-putin-walkin.mp3";
 import soundXFile from "../assets/sounds/x-files-theme.mp3";
 import soundSnoopDog from "../assets/sounds/snoop-dogg-smoke.mp3";
 import soundJixawMetalPipe from "../assets/sounds/jixaw-metal-pipe.mp3";
+import soundWiiStartup from "../assets/sounds/wii-startup-effect.mp3";
+import soundSpongeBob from "../assets/sounds/spongebob-effect.mp3";
+import soundCatLaught from "../assets/sounds/cat-laught-effect.mp3";
+import soundAugghh from "../assets/sounds/augghh-effect.mp3";
+import soundEverybodyWasKungfu from "../assets/sounds/everybody-was-kungfu.mp3";
+import soundKeyboard from "../assets/sounds/keyboard-effect.mp3";
+import soundLaughtEffect from "../assets/sounds/laugh-effect.mp3";
+import soundToothlessDance from "../assets/sounds/toothless-dance.mp3";
+import soundWindowsError from "../assets/sounds/windows-error.mp3";
+import soundAnimeWow from "../assets/sounds/anime-wow-effect.mp3";
 
 const tauntActive = ref(false);
 
@@ -57,6 +67,16 @@ function handleClick() {
       soundXFile,
       soundSnoopDog,
       soundJixawMetalPipe,
+      soundWiiStartup,
+      soundSpongeBob,
+      soundCatLaught,
+      soundAugghh,
+      soundEverybodyWasKungfu,
+      soundKeyboard,
+      soundLaughtEffect,
+      soundToothlessDance,
+      soundWindowsError,
+      soundAnimeWow,
     ]);
 
     tauntActive.value = true;
