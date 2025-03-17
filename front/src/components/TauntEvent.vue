@@ -12,14 +12,19 @@
 <script lang="ts"
         setup>
 
+import {ref} from "vue";
+
 function handleClick() {
   const btn = document.querySelector("#event-btn") as HTMLElement;
+  const tauntActive = ref(false);
 
-  if (btn) {
+  if (btn && !tauntActive.value) {
     btn.style.backgroundColor = "#499613";
+    tauntActive.value = true;
 
     setTimeout(() => {
       btn.style.backgroundColor = "#060b39";
+      tauntActive.value = false;
     }, 5000);
   }
 }
