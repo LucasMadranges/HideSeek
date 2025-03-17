@@ -5,13 +5,15 @@ export class SoundManager {
     this.initializeSounds(soundUrls);
   }
 
-  public playRandom() {
+  public playRandom(): HTMLAudioElement | undefined {
     const randomSound = this.sounds[Math.floor(Math.random() * this.sounds.length)];
     if (randomSound) {
       randomSound.currentTime = 0;
       randomSound.play()
         .catch(error => console.log("Erreur lors de la lecture du son:", error));
+      return randomSound;
     }
+    return undefined;
   }
 
   private initializeSounds(soundUrls: string[]) {

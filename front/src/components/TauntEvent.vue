@@ -1,7 +1,8 @@
 <template>
   <button id="event-btn"
+          :disabled="tauntActive"
+          :style="buttonStyle"
           class="q-pa-sm"
-          style="background-color: #060b39; position:absolute; bottom: 64px; right: 12px; z-index: 10; border-radius: 12px; border: none; transition: all 0.2s;"
           @click="handleClick">
     <q-icon color="white"
             name="notifications_active"
@@ -12,8 +13,10 @@
 <script lang="ts"
         setup>
 
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {SoundManager} from "components/SoundManager";
+
+import type {CSSProperties} from "vue";
 
 import soundUniversalFunnyTheme from "../assets/sounds/universal_funny_theme.mp3";
 import soundEmotionalDamage from "../assets/sounds/emotional_damage.mp3";
@@ -24,32 +27,48 @@ import soundMariosAgony from "../assets/sounds/marios-agony-effect.mp3";
 import soundNoNoSquare from "../assets/sounds/no-no-square-effect.mp3";
 import soundWidePutinWalkin from "../assets/sounds/wide-putin-walkin.mp3";
 import soundXFile from "../assets/sounds/x-files-theme.mp3";
+import soundSnoopDog from "../assets/sounds/snoop-dogg-smoke.mp3";
+import soundJixawMetalPipe from "../assets/sounds/jixaw-metal-pipe.mp3";
+
+const tauntActive = ref(false);
+
+const buttonStyle = computed<CSSProperties>(() => ({
+  backgroundColor: tauntActive.value ? "#499613" : "#060b39",
+  position: "absolute" as const,
+  bottom: "64px",
+  right: "12px",
+  zIndex: 10,
+  borderRadius: "12px",
+  border: "none",
+  transition: "all 0.2s",
+}));
 
 function handleClick() {
-  const soundManager = new SoundManager([
-    soundUniversalFunnyTheme,
-    soundEmotionalDamage,
-    soundBadToTheBone,
-    soundBruh,
-    soundCartoonChase,
-    soundMariosAgony,
-    soundNoNoSquare,
-    soundWidePutinWalkin,
-    soundXFile,
-  ]);
+  if (!tauntActive.value) {
+    const soundManager = new SoundManager([
+      soundUniversalFunnyTheme,
+      soundEmotionalDamage,
+      soundBadToTheBone,
+      soundBruh,
+      soundCartoonChase,
+      soundMariosAgony,
+      soundNoNoSquare,
+      soundWidePutinWalkin,
+      soundXFile,
+      soundSnoopDog,
+      soundJixawMetalPipe,
+    ]);
 
-  const btn = document.querySelector("#event-btn") as HTMLElement;
-  const tauntActive = ref(false);
-
-  if (btn && !tauntActive.value) {
-    btn.style.backgroundColor = "#499613";
     tauntActive.value = true;
-    soundManager.playRandom();
+    const currentSound = soundManager.playRandom();
 
-    setTimeout(() => {
-      btn.style.backgroundColor = "#060b39";
+    if (currentSound === undefined) {
+      return;
+    }
+
+    currentSound.addEventListener("ended", () => {
       tauntActive.value = false;
-    }, 5000);
+    });
   }
 }
 
