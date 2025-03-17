@@ -14,4 +14,13 @@ model Users {
   username String  @unique
   email    String  @unique
   password String
+  game     Game?   @relation("GamePlayers", fields: [gameId], references: [id])
+  gameId   String?
+}
+
+model Game {
+  id                String  @id @default(uuid())
+  zone_localisation Json // { lng, lat, radius }
+  time              String
+  players           Users[] @relation("GamePlayers")
 }
