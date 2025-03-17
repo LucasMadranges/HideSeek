@@ -22,6 +22,12 @@ const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = ref<MapboxMap>();
 const userLocation = ref<[number, number] | null>(null);
 
+const position = ref<{ lng: number, lat: number, radius: number } | null>({
+  lng: 2.3488,
+  lat: 48.8534,
+  radius: 500,
+});
+
 const initGeolocation = () => {
   if (!mapInstance.value) return;
 
@@ -71,10 +77,14 @@ onMounted(() => {
 
   mapboxgl.accessToken = mapboxToken;
 
+  if (!position.value) {
+    return;
+  }
+
   const map = new mapboxgl.Map({
     container: mapContainer.value,
     style: import.meta.env.VITE_MAPBOX_STYLE_URL,
-    center: [2.3488, 48.8534],
+    center: [position.value?.lng, position.value?.lat],
     pitchWithRotate: false,
     touchPitch: false,
     zoom: 12,
@@ -84,6 +94,48 @@ onMounted(() => {
 
   map.on("load", () => {
     const geolocateControl = initGeolocation();
+
+    map.addSource("game-zone", {
+      type: "geojson",
+      data: {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "Polygon",
+          coordinates: [[
+            ...Array(65).fill(0).map((_, i) => {
+              const radius = position.value?.radius ? (position.value?.radius / 1000) : 0.5; // 500m en kilomètres
+              const angle = (i * 360) / 64;
+              const rad = angle * Math.PI / 180;
+              const lat = 48.8534 + (radius * Math.sin(rad)) / 111;
+              const lng = 2.3488 + (radius * Math.cos(rad)) / (111 * Math.cos(48.8534 * Math.PI / 180));
+              return [lng, lat];
+            }),
+          ]],
+        },
+      },
+    });
+
+    map.addLayer({
+      id: "game-zone-fill",
+      type: "fill",
+      source: "game-zone",
+      paint: {
+        "fill-color": "#45d427",
+        "fill-opacity": 0.4,
+      },
+    });
+
+    map.addLayer({
+      id: "game-zone-border",
+      type: "line",
+      source: "game-zone",
+      paint: {
+        "line-color": "#45d427",
+        "line-width": 3,
+        "line-opacity": 1,
+      },
+    });
 
     // Attendre que la carte soit complètement chargée
     map.once("idle", () => {
