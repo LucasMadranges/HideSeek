@@ -24,6 +24,39 @@ const position = ref<{ lng: number, lat: number, radius: number } | null>({
   radius: 500,
 });
 
+const generateTestPlayers = (numberOfPlayers: number = 10) => {
+  const centerPoint = {
+    lat: 48.8534,  // Paris latitude
+    lng: 2.3488,    // Paris longitude
+  };
+
+  const players = [];
+
+  for (let i = 0 ; i < numberOfPlayers ; i++) {
+    // Génère une position aléatoire dans un rayon de 500m
+    const radius = Math.random() * 0.5; // 500m en kilomètres
+    const angle = Math.random() * 360;  // Angle aléatoire
+    const rad = angle * Math.PI / 180;
+
+    // Calcul des nouvelles coordonnées
+    const lat = centerPoint.lat + (radius * Math.sin(rad)) / 111;
+    const lng = centerPoint.lng +
+      (radius * Math.cos(rad)) / (111 * Math.cos(centerPoint.lat * Math.PI / 180));
+
+    players.push({
+      id: `player-${i}`,
+      username: `Joueur${i}`,
+      position: {
+        lat: lat,
+        lng: lng,
+      },
+      team: "Hider",
+    });
+  }
+
+  return players;
+};
+
 const initGeolocation = () => {
   if (!mapInstance.value) return;
 
@@ -33,24 +66,12 @@ const initGeolocation = () => {
       timeout: 30000,
       maximumAge: 60000,
     },
-    fitBoundsOptions: {
-      maxZoom: 15,
-    },
     trackUserLocation: true,
     showAccuracyCircle: true,
     showUserLocation: true,
   });
 
   mapInstance.value.addControl(geolocateControl, "top-right");
-
-  // Écouteurs d'événements plus détaillés
-  geolocateControl.on("trackuserlocationstart", () => {
-    console.log("Début du suivi de localisation");
-  });
-
-  geolocateControl.on("trackuserlocationend", () => {
-    console.log("Fin du suivi de localisation");
-  });
 
   geolocateControl.on("geolocate", (position) => {
     console.log("Position mise à jour");
@@ -67,6 +88,8 @@ const initGeolocation = () => {
 
   return geolocateControl;
 };
+
+const testPlayers = generateTestPlayers(10);
 
 onMounted(() => {
   if (!mapContainer.value) return;
@@ -112,6 +135,24 @@ onMounted(() => {
       },
     });
 
+    map.addSource("players", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: testPlayers.map(player => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [player.position.lng, player.position.lat],
+          },
+          properties: {
+            id: player.id,
+            username: player.username,
+          },
+        })),
+      },
+    });
+
     map.addLayer({
       id: "game-zone-fill",
       type: "fill",
@@ -131,6 +172,39 @@ onMounted(() => {
         "line-width": 3,
         "line-opacity": 1,
       },
+    });
+
+    map.addLayer({
+      id: "players-layer",
+      type: "circle",
+      source: "players",
+      paint: {
+        "circle-radius": 8,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#FFFFFF",
+      },
+    });
+
+    testPlayers.forEach(player => {
+      const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+      })
+        .setLngLat([player.position.lng, player.position.lat])
+        .setHTML(`<div>${player.username}</div>`);
+
+      // Créer un élément DOM pour le marqueur
+      const markerElement = document.createElement("div");
+      markerElement.style.width = "20px";
+      markerElement.style.height = "20px";
+      markerElement.style.borderRadius = "50%";
+      markerElement.style.backgroundColor = player.team === "Hider" ? "#0083D4" : "#E93E00";
+      markerElement.style.border = "2px solid white";
+
+      new mapboxgl.Marker(markerElement)
+        .setLngLat([player.position.lng, player.position.lat])
+        .setPopup(popup)
+        .addTo(map);
     });
 
     // Attendre que la carte soit complètement chargée
