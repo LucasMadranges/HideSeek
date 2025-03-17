@@ -75,6 +75,8 @@ onMounted(() => {
     container: mapContainer.value,
     style: import.meta.env.VITE_MAPBOX_STYLE_URL,
     center: [2.3488, 48.8534],
+    pitchWithRotate: false,
+    touchPitch: false,
     zoom: 12,
   });
 
