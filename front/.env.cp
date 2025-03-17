@@ -1,0 +1,2 @@
+VITE_MAPBOX_TOKEN=
+VITE_MAPBOX_STYLE_URL=mapbox://styles/lucasmdr/cm83gnn8v000p01sbb0758g5b
