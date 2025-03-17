@@ -1,15 +1,26 @@
 <template>
   <button class="q-pa-sm"
           style="background-color: #060b39; position:absolute; bottom: 64px; left: 12px; z-index: 10; border-radius: 12px; border: none;"
-          @click="() => isOpen = !isOpen">
+          @click="toggleList">
     <q-icon color="white"
             name="groups"
             size="48px"/>
   </button>
 
+  <div v-if="isOpen"
+       style="position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 15;"
+       @click="closeList"/>
+
   <Transition name="slide">
     <div v-if="isOpen"
-         style="position: absolute; bottom: 0; left: 0; width: 100%; height: calc(100svh - 200px); z-index: 20; background-color: #060b39; border-radius: 12px; padding: 32px 12px 64px;color: white; display: flex;">
+         style="position: absolute; bottom: 0; left: 0; width: 100%; height: calc(100svh - 200px); z-index: 20; background-color: #060b39; border-radius: 12px; padding: 32px 12px 64px;color: white; display: flex;"
+         @click.stop>
       <button style="background-color: transparent; border: none; position: absolute; top: 12px; right: 0;"
               @click="() => isOpen = !isOpen">
         <q-icon color="white"
@@ -90,12 +101,19 @@
 
 <script lang="ts"
         setup>
-
+import {ref} from "vue";
 import HiderIcon from "components/HiderIcon.vue";
 import SeekerIcon from "components/SeekerIcon.vue";
-import {ref} from "vue";
 
 const isOpen = ref(false);
+
+const toggleList = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const closeList = () => {
+  isOpen.value = false;
+};
 </script>
 
 <style>
