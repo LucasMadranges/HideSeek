@@ -1,9 +1,15 @@
 <template>
   <div
+    v-show="isMapReady"
     ref="mapContainer"
     class="map-container"
     style="z-index: 0;"
   />
+  <div v-show="!isMapReady"
+       class="loading-container">
+    <q-spinner-dots size="50px"/>
+    Chargement de la carte...
+  </div>
 </template>
 
 <script lang="ts"
@@ -12,6 +18,8 @@ import {onMounted, ref} from "vue";
 import type {Map as MapboxMap} from "mapbox-gl";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+
+const isMapReady = ref(false);
 
 const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const mapContainer = ref<HTMLElement | null>(null);
@@ -63,8 +71,8 @@ const initGeolocation = () => {
   const geolocateControl = new mapboxgl.GeolocateControl({
     positionOptions: {
       enableHighAccuracy: false,
-      timeout: 30000,
-      maximumAge: 60000,
+      timeout: 10000,
+      maximumAge: 30000,
     },
     trackUserLocation: true,
     showAccuracyCircle: true,
@@ -213,6 +221,11 @@ onMounted(() => {
         geolocateControl.trigger();
       }
     });
+
+    isMapReady.value = true;
+
+    // NOTE: Si on peut changer ça pour resize la map à son apparition
+    setTimeout(() => map.resize(), 0);
   });
 });
 </script>
@@ -224,6 +237,17 @@ onMounted(() => {
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.loading-container {
+  width: 100%;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
 }
 
 :deep(.q-page) {
