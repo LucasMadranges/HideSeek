@@ -3,6 +3,7 @@ import {UsersService} from "./users.service";
 import {ApiParam} from "@nestjs/swagger";
 import {CreateUserDto} from "./models/create-user.dto";
 import {Users} from "@prisma/client";
+import {UpdateUserDto} from "./models/update-user.dto";
 
 @Controller("users")
 export class UsersController {
@@ -41,8 +42,8 @@ export class UsersController {
     }
 
     @Put(":id")
-    async updateUser(@Param("id") id: string, @Body() createUserDto: CreateUserDto): Promise<Users> {
-        return this.usersService.updateUser(id, createUserDto);
+    async updateUser(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto): Promise<Users> {
+        return this.usersService.updateUser(id, updateUserDto);
     }
 
     @Delete(":id")
