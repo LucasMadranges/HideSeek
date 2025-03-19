@@ -14,10 +14,11 @@
 
 <script lang="ts"
         setup>
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import type {Map as MapboxMap} from "mapbox-gl";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import {GameSocketService} from "src/services/gameSocket.service";
 
 const isMapReady = ref(false);
 
@@ -31,6 +32,58 @@ const position = ref<{ lng: number, lat: number, radius: number } | null>({
   lat: 48.8534,
   radius: 500,
 });
+
+const gameSocket = new GameSocketService();
+const players = ref(new Map()); // Map pour stocker les joueurs et leurs positions
+
+onMounted(() => {
+  // Écouter les événements de jeu
+  gameSocket.onPlayerJoined(({playerId, position}) => {
+    players.value.set(playerId, position);
+    // Mettre à jour la carte avec le nouveau joueur
+  });
+
+  gameSocket.onPlayerLeft(({playerId}) => {
+    players.value.delete(playerId);
+    // Retirer le joueur de la carte
+  });
+
+  gameSocket.onPlayerMoved(({playerId, position}) => {
+    players.value.set(playerId, position);
+    // Mettre à jour la position du joueur sur la carte
+  });
+});
+
+onUnmounted(() => {
+  gameSocket.disconnect();
+});
+
+// Fonction pour créer une partie
+/*
+ const createGame = async () => {
+ try {
+ const game = await gameSocket.createGame({
+ zone_localisation: {
+ lng: 2.3488,
+ lat: 48.8534,
+ radius: 500,
+ },
+ time: "30:00",
+ });
+ console.log("Partie créée:", game);
+ } catch (error) {
+ console.error("Erreur lors de la création de la partie:", error);
+ }
+ };
+
+ // Fonction pour rejoindre une partie
+ const joinGame = (gameId: string) => {
+ gameSocket.joinGame(gameId, {
+ lng: 2.3488,
+ lat: 48.8534,
+ });
+ };
+ */
 
 const generateTestPlayers = (numberOfPlayers: number = 10) => {
   const centerPoint = {
