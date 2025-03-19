@@ -29,7 +29,13 @@ export class GameSocketService {
   private readonly socket: Socket;
 
   constructor() {
-    this.socket = io("http://localhost:3000");
+    this.socket = io("http://localhost:3000", {
+      withCredentials: true,
+      transports: ["websocket", "polling"],
+      extraHeaders: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
 
     this.socket.on("connect", () => {
       console.log("Connecté au serveur de jeu");

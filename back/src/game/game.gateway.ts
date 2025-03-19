@@ -11,7 +11,8 @@ import {PrismaService} from "../../prisma/prisma.service";
 
 @WebSocketGateway({
     cors: {
-        origin: "*", // À configurer selon votre environnement
+        origin: ["https://192.168.1.22:9200", "http://localhost:9200"],
+        credentials: true,
     },
 })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
