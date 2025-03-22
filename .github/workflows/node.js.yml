@@ -17,16 +17,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Move to front file
-        run: cd front/
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: 'front/package-lock.json'
       - name: Install dependencies
+        working-directory: ./front
         run: npm ci
       - name: Run build
+        working-directory: ./front
         run: npm run build --if-present
   
   back:
@@ -51,9 +52,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: 'back/package-lock.json'
       - name: Install dependencies
+        working-directory: ./back
         run: npm ci
       - name: Build project
+        working-directory: ./back
         run: npm run build --if-present
       - name: Run build
+        working-directory: ./back
         run: npm run start:prod --if-present
