@@ -23,12 +23,36 @@ export class GameService {
     }
 
     async createGame(data: CreateGameDto): Promise<Games> {
+        // Vérifier d'abord si tous les joueurs existent
+        const existingPlayers = await this.prisma.players.findMany({
+            where: {
+                id: {
+                    in: data.players,
+                },
+            },
+        });
+
+        if (existingPlayers.length !== data.players.length) {
+            throw new Error("Certains joueurs n'existent pas");
+        }
+
         return this.prisma.games.create({
             data: {
                 zone_localisation: data.zone_localisation,
                 time: data.time,
                 players: {
-                    connect: data.players.map(id => ({id})),
+                    createMany: {
+                        data: data.players.map(playerId => ({
+                            playerId: playerId,
+                        })),
+                    },
+                },
+            },
+            include: {
+                players: {
+                    include: {
+                        player: true,
+                    },
                 },
             },
         });
@@ -36,14 +60,23 @@ export class GameService {
 
     async updateGame(id: string, data: UpdateGameDto): Promise<Games> {
         return this.prisma.games.update({
-            where: {
-                id,
-            },
+            where: {id},
             data: {
                 zone_localisation: data.zone_localisation,
                 time: data.time,
                 players: {
-                    connect: data.players.map(id => ({id})),
+                    create: data.players.map(playerId => ({
+                        player: {
+                            connect: {id: playerId},
+                        },
+                    })),
+                },
+            },
+            include: {
+                players: {
+                    include: {
+                        player: true,
+                    },
                 },
             },
         });
