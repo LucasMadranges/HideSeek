@@ -1,0 +1,32 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.19.0]
+    env:
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      FRONT_URL: ${{secrets.FRONT_URL}}
+      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+      VITE_MAPBOX_STYLE_URL: ${{secrets.VITE_MAPBOX_STYLE_URL}}
+      VITE_MAPBOX_TOKEN: ${{secrets.VITE_MAPBOX_TOKEN}}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
