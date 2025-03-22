@@ -53,7 +53,7 @@ jobs:
       - name: Build project
         run: |
           npm run build
-          npm run start:prod
+          pm2 start back
   
   front:
     needs: back
@@ -80,4 +80,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run build
-        run: npm run build
+        run: |
+          npm run build
+          pm2 start front
