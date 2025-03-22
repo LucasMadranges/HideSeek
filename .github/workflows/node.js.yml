@@ -17,13 +17,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Move to front file
+        run: cd front/
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Move to front file
-        run: cd front/
       - name: Install dependencies
         run: npm ci
       - name: Run build
@@ -44,13 +44,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Move to back file
+        run: cd back/
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Move to back file
-        run: cd back/
       - name: Install dependencies
         run: npm ci
       - name: Build project
