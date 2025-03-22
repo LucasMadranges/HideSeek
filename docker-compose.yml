@@ -7,7 +7,7 @@ services:
     volumes:
       - db_users_data:/var/lib/postgresql/data
     env_file:
-      - ./back/.env
+      - ./database/.env
 
 volumes:
   db_users_data:
