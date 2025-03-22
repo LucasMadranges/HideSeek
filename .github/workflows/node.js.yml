@@ -17,8 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-          clean: false
+          clean: true
       - name: Create .env file
         run: |
           echo "POSTGRES_DB=${POSTGRES_DB}" >> .env
