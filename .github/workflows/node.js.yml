@@ -14,6 +14,7 @@ jobs:
       POSTGRES_DB: ${{secrets.POSTGRES_DB}}
       POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
       POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+    
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,7 +35,6 @@ jobs:
     defaults:
       run:
         working-directory: ./back
-
     strategy:
       matrix:
         node-version: [ 18.19.0 ]
@@ -58,7 +58,7 @@ jobs:
         run: |
           npm run build
           pm2 delete back || true
-          pm2 start ecosystem.config.js --env production
+          pm2 start pm2.config.js --env production
   
   front:
     needs: back
@@ -66,7 +66,6 @@ jobs:
     defaults:
       run:
         working-directory: ./front
-    
     strategy:
       matrix:
         node-version: [ 18.19.0 ]
@@ -89,4 +88,5 @@ jobs:
       - name: Run build
         run: |
           npm run build
-          pm2 start front
+          pm2 delete back || true
+          pm2 start pm2.config.js --env production
