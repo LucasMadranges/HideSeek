@@ -16,6 +16,12 @@ jobs:
       POSTGRES_USER: ${{secrets.POSTGRES_USER}}
     steps:
       - uses: actions/checkout@v4
+      - name: Disable sparse checkout
+        run: |
+          git config --unset core.sparseCheckout || true
+          git config sparse-checkout.cone false || true
+          git sparse-checkout disable || true
+          git checkout main
       - name: Create .env file
         run: |
           echo "POSTGRES_DB=${POSTGRES_DB}" >> .env
