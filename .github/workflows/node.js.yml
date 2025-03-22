@@ -39,7 +39,7 @@ jobs:
       matrix:
         node-version: [ 18.19.0 ]
     env:
-      DATABASE_URL: postgresql://${{secrets.POSTGRES_USER}}:${{secrets.POSTGRES_PASSWORD}}@hideeseek:5432/${{secrets.POSTGRES_DB}}
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
       FRONT_URL: ${{secrets.FRONT_URL}}
 
     steps:
