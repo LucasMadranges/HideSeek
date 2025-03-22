@@ -38,6 +38,9 @@ jobs:
     strategy:
       matrix:
         node-version: [ 18.19.0 ]
+    env:
+      DATABASE_URL: ${{secrets.DATABASE_URL}}
+      FRONT_URL: ${{secrets.FRONT_URL}}
 
     steps:
       - uses: actions/checkout@v4
