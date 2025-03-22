@@ -1,1 +1,9 @@
 .idea
+
+# Back
+back/node_modules/
+back/dist/
+
+# Front
+front/node_modules/
+front/dist/
