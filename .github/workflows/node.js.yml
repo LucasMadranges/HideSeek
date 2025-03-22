@@ -24,7 +24,7 @@ jobs:
       - name: Start Database
         run: |
           docker-compose down --volumes --remove-orphans
-          docker-compose up -d database
+          docker-compose up -d
 
   back:
     needs: database
