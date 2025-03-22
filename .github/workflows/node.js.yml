@@ -88,5 +88,5 @@ jobs:
       - name: Run build
         run: |
           npm run build
-          pm2 delete back || true
+          pm2 delete front || true
           pm2 start pm2.config.cjs --env production
