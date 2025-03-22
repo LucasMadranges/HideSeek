@@ -5,39 +5,22 @@ on:
     branches: [ "main" ]
 
 jobs:
-  front:
+  database:
     runs-on: self-hosted
-    defaults:
-      run:
-        working-directory: ./front
-    
-    strategy:
-      matrix:
-        node-version: [ 18.19.0 ]
-    env:
-      VITE_MAPBOX_STYLE_URL: ${{secrets.VITE_MAPBOX_STYLE_URL}}
-      VITE_MAPBOX_TOKEN: ${{secrets.VITE_MAPBOX_TOKEN}}
-
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: 'front/package-lock.json'
-      - name: Install dependencies
-        run: npm ci
-      - name: Run build
-        run: npm run build
-  
+      - name: Start Database
+        run: |
+          docker-compose down --volumes --remove-orphans
+          docker-compose up -d database
+
   back:
-    needs: front
+    needs: database
     runs-on: self-hosted
     defaults:
       run:
         working-directory: ./back
-    
+
     strategy:
       matrix:
         node-version: [ 18.19.0 ]
@@ -62,3 +45,30 @@ jobs:
         run: |
           npm run build
           npm run start:prod
+  
+  front:
+    needs: back
+    runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: ./front
+    
+    strategy:
+      matrix:
+        node-version: [ 18.19.0 ]
+    env:
+      VITE_MAPBOX_STYLE_URL: ${{secrets.VITE_MAPBOX_STYLE_URL}}
+      VITE_MAPBOX_TOKEN: ${{secrets.VITE_MAPBOX_TOKEN}}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: 'front/package-lock.json'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run build
+        run: npm run build
