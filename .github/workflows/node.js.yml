@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          clean: true
+          clean: false
       - name: Create .env file
         run: |
           echo "POSTGRES_DB=${POSTGRES_DB}" >> .env
@@ -45,12 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          clean: true
-          cleanup-exclude: |
-            back/**/*
-            .github/**/*
-            database/**/*
-            docker-compose.yml
+          clean: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -81,13 +76,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          clean: true
-          # Ne nettoyer que les fichiers du front
-          cleanup-exclude: |
-            back/**/*
-            .github/**/*
-            database/**/*
-            docker-compose.yml
+          clean: false
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
