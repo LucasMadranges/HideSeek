@@ -52,11 +52,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: 'back/package-lock.json'
-      - name: Debug Database URL format
-        run: |
-          echo "Longueur de DATABASE_URL: ${#DATABASE_URL}"
-          echo "Format de l'URL (masqué):"
-          echo "$DATABASE_URL" | sed 's/[^:@/]*/***/g'
       - name: Install dependencies
         run: npm ci
       - name: Build project
