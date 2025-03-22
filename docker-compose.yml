@@ -1,7 +1,7 @@
 services:
-  hideeseek-db:
+  hideseek-db:
     image: postgres:16
-    container_name: hideeseek
+    container_name: hideseek
     restart: always
     ports:
       - "5432:5432"
