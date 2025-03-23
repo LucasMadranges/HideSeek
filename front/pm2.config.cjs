@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: "front",
-    script: "quasar serve",
+    script: "npm run start:build",
     env_production: process.env,
   }],
 };
