@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Put} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Patch, Post, Put, UnauthorizedException } from "@nestjs/common";
 import {UsersService} from "./users.service";
 import {ApiParam} from "@nestjs/swagger";
 import {CreateUserDto} from "./models/create-user.dto";
@@ -49,5 +49,14 @@ export class UsersController {
     @Delete(":id")
     async deleteUser(@Param("id") id: string): Promise<Users> {
         return this.usersService.deleteUser(id);
+    }
+
+    @Post('login')
+    async login(@Body() body: { email: string; password: string }) {
+        const user = await this.usersService.validateUser(body.email, body.password);
+        if (!user) {
+            throw new UnauthorizedException('Email ou mot de passe incorrect');
+        }
+        return this.usersService.login(user);
     }
 }

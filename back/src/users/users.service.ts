@@ -3,11 +3,13 @@ import {PrismaService} from "../../prisma/prisma.service";
 import {CreateUserDto} from "./models/create-user.dto";
 import {Users} from "@prisma/client";
 import {UpdateUserDto} from "./models/update-user.dto";
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
     constructor(
         private prisma: PrismaService,
+        private jwtService: JwtService,
     ) {}
 
     async getUsers(): Promise<Users[]> {
@@ -51,5 +53,22 @@ export class UsersService {
                 id,
             },
         });
+    }
+
+
+    async validateUser(email: string, password: string): Promise<any> {
+        const user = this.prisma.users.findUnique({where: {email}});
+        if (user && user.password === password) {
+            const { password, ...result } = user;
+            return result;
+        }
+        return null;
+    }
+
+    async login(user: any) {
+        const payload = { email: user.email, sub: user.id };
+        return {
+            access_token: this.jwtService.sign(payload),
+        };
     }
 }
